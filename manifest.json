@@ -1,0 +1,30 @@
+{
+    "manifest_version": 2,
+    "name": "Eazy Form Filler",
+    "description": "Eazy Form Filler is a Chrome extension designed to simplify testing and form filling. It identifies forms on a webpage, allows users to save input values, and can prefill these saved values upon subsequent visits. Ideal for developers and testers who frequently work with forms.",
+    "author": "Rob Hatcher",
+    "version": "1.0",
+    "permissions": ["tabs", "<all_urls>", "storage"],
+    "background": {
+        "scripts": ["background.js"]
+      },
+    "browser_action": {
+        "default_popup": "popup.html",
+        "default_icon": {
+            "16": "images/icon16.png",
+            "48": "images/icon48.png",
+            "128": "images/icon128.png"
+        }
+    },
+    "icons": {
+        "16": "images/icon16.png",
+        "48": "images/icon48.png",
+        "128": "images/icon128.png"
+    },
+    "content_scripts": [
+        {
+          "matches": ["<all_urls>"],
+          "js": ["content.js"]
+        }
+      ]
+}
