@@ -8,7 +8,12 @@ document.getElementById('getforms').addEventListener('click', function() {
                 let formButton = document.createElement('button');
                 formButton.textContent = `${form.id.length ? form.id : form.name.length ? form.name : form.index} Form`;
                 formButton.addEventListener('click', function() {
+                    // Create a new fieldsContainer div
                     let fieldsContainer = document.createElement('div');
+                
+                    // Clear out all previous forms
+                    formsList.innerHTML = '';
+                
                     form.elements.forEach((element, index) => {
                         if (element.type !== 'button' && element.type !== 'submit') {
                             let fieldContainer = document.createElement('div');

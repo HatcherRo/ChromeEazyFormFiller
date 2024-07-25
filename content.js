@@ -49,12 +49,17 @@ if (typeof forms === 'undefined') {
 function addPrefillButtons() {
     let forms = document.getElementsByTagName('form');
     for (let i = 0; i < forms.length; i++) {
-        let prefillButton = document.createElement('button');
-        prefillButton.textContent = 'Prefill Form';
-        prefillButton.addEventListener('click', function() {
-            prefillForm(forms[i], i);
+        // Check if there is saved data for the form
+        chrome.storage.local.get([window.location.href], function(result) {
+            if (result[window.location.href][i]) {
+                let prefillButton = document.createElement('button');
+                prefillButton.textContent = 'Prefill Form';
+                prefillButton.addEventListener('click', function() {
+                    prefillForm(forms[i], i);
+                });
+                forms[i].parentNode.insertBefore(prefillButton, forms[i]);
+            }
         });
-        forms[i].parentNode.insertBefore(prefillButton, forms[i]);
     }
 }
 

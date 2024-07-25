@@ -7,7 +7,6 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
   // background.js
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    console.log(request.forms);
     //loop over all the forms and find any named "uxpLoginForm"
     let loginForm = request.forms.find(form => form.name === 'uxpLoginForm');
     console.log(loginForm); 
