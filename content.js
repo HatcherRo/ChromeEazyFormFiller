@@ -44,14 +44,13 @@ if (typeof forms === 'undefined') {
     }
 });
 
-
 // This function adds a prefill button above each form on the page
 function addPrefillButtons() {
     let forms = document.getElementsByTagName('form');
     for (let i = 0; i < forms.length; i++) {
         // Check if there is saved data for the form
-        chrome.storage.local.get([window.location.href], function(result) {
-            if (result[window.location.href][i]) {
+        chrome.storage.local.get(["EasyFormFiller"][window.location.href], function(result) {
+            if (result["EasyFormFiller"][window.location.href][i]) {
                 let prefillButton = document.createElement('button');
                 prefillButton.textContent = 'Prefill Form';
                 prefillButton.addEventListener('click', function() {
@@ -65,8 +64,8 @@ function addPrefillButtons() {
 
 // This function prefills a form with saved data
 function prefillForm(form, formIndex) {
-    chrome.storage.local.get([window.location.href], function(result) {
-        let urlData = result[window.location.href];
+    chrome.storage.local.get(["EasyFormFiller"][window.location.href], function(result) {
+        let urlData = result["EasyFormFiller"][window.location.href];
         if (urlData && urlData[formIndex]) {
             let formData = urlData[formIndex];
             for (let i = 0; i < formData.length; i++) {

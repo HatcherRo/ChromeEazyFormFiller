@@ -1,8 +1,31 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
 <body>
-    <button id="getforms">Get Forms</button>
+    <div class="list-group">
+        <a href="#" class="list-group-item list-group-item-action">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+        </a>
+        <a href="#" class="list-group-item list-group-item-action">
+            <i class="fas fa-file-import"></i>
+            <span>Import</span>
+        </a>
+        <button id="exportButton" class="list-group-item list-group-item-action">
+            <i class="fas fa-file-export"></i>
+            <span>Export</span>
+        </button>
+        <button id="getforms" class="list-group-item list-group-item-action">
+            <span>Get Forms</span>
+        </button>
+    </div>
     <div id="formsList"></div>
+    
+    <script src="js/getForms.js"></script>
     <script src="popup.js"></script>
 </body>
 </html>

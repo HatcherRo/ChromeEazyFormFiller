@@ -5,9 +5,13 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     }
   });
 
-  // background.js
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    //loop over all the forms and find any named "uxpLoginForm"
-    let loginForm = request.forms.find(form => form.name === 'uxpLoginForm');
-    console.log(loginForm); 
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+  if (request.action === "download") {
+    var data = request.data;
+    var json = JSON.stringify(data);
+    var blob = new Blob([json], {type: 'application/json'});
+    var url = URL.createObjectURL(blob);
+    chrome.downloads.download({url: url, filename: 'data.json'});
+    console.log("DOWNLOADING RUNTIME", data);
+  }
 });
