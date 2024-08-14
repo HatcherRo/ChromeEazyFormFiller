@@ -1,0 +1,19 @@
+{
+  "easyFormFiller": {
+    "https://enerflo.io/lead/new": [
+      {
+        "newCustomerForm": {
+          "0": [
+            {
+              "formData": {
+                "firstName": "Jane",
+                "lastName": "Doe",
+                "email": ""
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
