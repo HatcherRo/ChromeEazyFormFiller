@@ -1,8 +1,3 @@
-// document.getElementById('getforms').addEventListener('click', function() {
-//     console.log('getforms clicked');
-//     getForms();
-// });
-
 document.getElementById('exportButton').addEventListener('click', function () {
     console.log('exportButton clicked');
 });
@@ -93,6 +88,9 @@ function saveButtonClicked(form) {
 function createJSONFromForm(formData, formName) {
     let jsonData = {};
     formData.forEach(item => {
+        if (!item) {
+            return;
+        }
         jsonData[item.name] = item.value;
     });
 
@@ -104,16 +102,21 @@ function saveJSON(jsonData, formName) {
         const currentUrl = currentTab.url;
         // Assuming you want to save jsonData under a specific key, e.g., 'formData'
         chrome.storage.local.get(["EasyFormFiller"], function (result) {
-            let urlData = result["EasyFormFiller"][currentUrl] ? result["EasyFormFiller"][currentUrl] : {};
-            console.log(urlData);
-            chrome.storage.local.set({
-                "EasyFormFiller": {
-                    [currentUrl]: {
-                        [formName]: [{ formData: jsonData }]
-                    }
-                }
-            }, function () {
-                console.log("Form data saved.");
+            console.log("Storage data: ", result);
+            // Initialize EasyFormFiller object if it doesn't exist
+            let storageData = result["EasyFormFiller"] ? result["EasyFormFiller"] : {};
+            
+            // Check if currentUrl exists, if not initialize it
+            if (!storageData[currentUrl]) {
+                storageData[currentUrl] = {};
+            }
+            
+            // Update or add the new form data for the currentUrl
+            storageData[currentUrl][formName] = [{ formData: jsonData }];
+            
+            // Save the updated storageData back to chrome.storage.local
+            chrome.storage.local.set({ "EasyFormFiller": storageData }, function () {
+                console.log("Form data saved: ", storageData);
             });
         });
     });
