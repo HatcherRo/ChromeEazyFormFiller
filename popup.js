@@ -1,14 +1,63 @@
-document.getElementById('exportButton').addEventListener('click', function () {
-    console.log('exportButton clicked');
+document.getElementById('exportButton').addEventListener('click', async function () {
+    try {
+        const data = await getExportData(); 
+        const jsonString = JSON.stringify(data);
+        const blob = new Blob([jsonString], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+
+        const downloadAnchor = document.createElement('a');
+        downloadAnchor.href = url;
+        downloadAnchor.download = 'exportedData.json'; // Specify the file name for the download
+        document.body.appendChild(downloadAnchor); // Append the anchor to the document
+        downloadAnchor.click(); // Programmatically click the anchor to trigger the download
+
+        document.body.removeChild(downloadAnchor); // Remove the anchor from the document
+        URL.revokeObjectURL(url); // Revoke the Blob URL
+
+    } catch (error) {
+        console.error("Failed to get export data:", error);
+    }
 });
 
 document.getElementById('importButton').addEventListener('click', function () {
-    console.log('importButton clicked');
+    const contentDiv = document.getElementById('content');
+    contentDiv.innerHTML = '';
+    if (!document.getElementById('jsonInput')) {
+        const textarea = document.createElement('textarea');
+        textarea.id = 'jsonInput';
+        textarea.rows = 10;
+        textarea.cols = 50;
+        textarea.placeholder = 'Paste JSON here...';
+        contentDiv.appendChild(textarea);
+
+        const saveButton = document.createElement('button');
+        saveButton.textContent = 'Save JSON'; // Step 2: Set button text
+
+        contentDiv.appendChild(saveButton);
+
+        saveButton.addEventListener('click', function () {
+            const jsonText = textarea.value;
+            try {
+                const jsonData = JSON.parse(jsonText);
+                chrome.storage.local.set({ "EasyFormFiller": jsonData }, function () {
+                    console.log("Form data saved: ", storageData);
+                });
+                contentDiv.innerHTML = '';
+                alert('Import complete.');
+            } catch (error) {
+                alert('Invalid JSON');
+            }
+        });
+
+        textarea.focus();
+    }
 });
 
 document.addEventListener('DOMContentLoaded', function () {
     var getFormsButton = document.getElementById('getforms');
+    const contentDiv = document.getElementById('content');
     getFormsButton.addEventListener('click', function () {
+        contentDiv.innerHTML = '';
         chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
             chrome.tabs.sendMessage(tabs[0].id, { action: "fetchForms" }, function (response) {
                 const forms = response.forms;
@@ -16,7 +65,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     console.log('No forms found');
                     return;
                 }
-                const formsList = document.getElementById('formsList');
+                const formsList = document.createElement('div');
+                formsList.id = 'formsList';
                 formsList.innerHTML = '';
                 let formCount = 0;
                 forms.forEach(form => {
@@ -52,6 +102,9 @@ document.addEventListener('DOMContentLoaded', function () {
                         saveButton.textContent = 'Save';
                         saveButton.addEventListener("click", function (event) {
                             saveButtonClicked(form);
+                            contentDiv.innerHTML = '';
+                            alert('Save complete.');
+
                         });
                         //add the save button to the formDiv
                         formDiv.appendChild(saveButton);
@@ -60,6 +113,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     // Append the button to formDiv
                     formDiv.appendChild(button);
                     formsList.appendChild(formDiv);
+                    contentDiv.appendChild(formsList);
                     formCount++;
                 });
             });
@@ -96,13 +150,13 @@ function createJSONFromForm(formData, formName) {
 
     saveJSON(jsonData, formName);
 }
+
 function saveJSON(jsonData, formName) {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
         var currentTab = tabs[0]; // there will be only one in this array
         const currentUrl = currentTab.url;
         // Assuming you want to save jsonData under a specific key, e.g., 'formData'
         chrome.storage.local.get(["EasyFormFiller"], function (result) {
-            console.log("Storage data: ", result);
             // Initialize EasyFormFiller object if it doesn't exist
             let storageData = result["EasyFormFiller"] ? result["EasyFormFiller"] : {};
             
@@ -121,3 +175,14 @@ function saveJSON(jsonData, formName) {
         });
     });
 }
+
+
+function getExportData() {
+    return new Promise((resolve, reject) => {
+        chrome.storage.local.get(["EasyFormFiller"], function (result) {
+            let storageData = result["EasyFormFiller"] ? result["EasyFormFiller"] : {};
+            resolve(storageData); // Step 2: Resolve the Promise with the data
+        });
+    });
+}
+
