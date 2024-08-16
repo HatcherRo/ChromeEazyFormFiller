@@ -23,6 +23,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
 function addPrefillButtons() {
     const forms = document.querySelectorAll('form');
+    let formCount = 0;
     forms.forEach(form => {
         const formName = form.id || form.name || 'unnamed_form_' + formCount;
         chrome.runtime.sendMessage({ action: "getCurrentTabUrl" }, function (response) {
@@ -37,6 +38,7 @@ function addPrefillButtons() {
                 }
             });
         });
+        formCount++;
     });
 }
 
