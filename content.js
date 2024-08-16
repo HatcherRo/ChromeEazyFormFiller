@@ -23,9 +23,8 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
 function addPrefillButtons() {
     const forms = document.querySelectorAll('form');
-    let formCount = 0;
-    forms.forEach(form => {
-        const formName = form.id || form.name || 'unnamed_form_' + formCount;
+    forms.forEach((form, index) => {
+        const formName = form.id || form.name || 'unnamed_form_' + index;
         chrome.runtime.sendMessage({ action: "getCurrentTabUrl" }, function (response) {
             const currentUrl = response.url;
             chrome.storage.local.get(["EasyFormFiller"], function (result) {
@@ -38,7 +37,6 @@ function addPrefillButtons() {
                 }
             });
         });
-        formCount++;
     });
 }
 
@@ -53,7 +51,7 @@ function addPrefillButton(currentUrl, form, formData) {
     button.style.color = '#fff'; // Bootstrap button text color (white)
     button.style.cursor = 'pointer'; // Cursor pointer
     button.style.backgroundColor = '#6c757d'; // Grey background
-    button.style.border = '2px solid #007bff'; // Blue border
+    button.style.border = '2px solid #6f42c1'; // Purple border
 
     button.onclick = function () {
         const formElements = form.elements;

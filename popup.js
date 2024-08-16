@@ -68,14 +68,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 const formsList = document.createElement('div');
                 formsList.id = 'formsList';
                 formsList.innerHTML = '';
-                let formCount = 0;
-                forms.forEach(form => {
-                    const formName = form.id || form.name || 'unnamed_form_' + formCount;
+                forms.forEach((form, index) => {
+                    const formName = form.id || form.name || 'unnamed_form_' + index;
                     const formDiv = document.createElement('div');
                     const button = document.createElement('button');
                     button.textContent = formName; // Set the button text to formName
                     button.onclick = function () {
                         formDiv.innerHTML = ''
+                        formsList.innerHTML = '';
                         const formElements = form.elements;
                         formElements.forEach((element, index) => {
                             if (element.type !== "button" && element.type !== "submit") {
@@ -101,20 +101,20 @@ document.addEventListener('DOMContentLoaded', function () {
                         const saveButton = document.createElement('button');
                         saveButton.textContent = 'Save';
                         saveButton.addEventListener("click", function (event) {
-                            saveButtonClicked(form);
+                            saveButtonClicked(form, formName);
                             contentDiv.innerHTML = '';
-                            alert('Save complete.');
+                            alert('Save complete refresh the page to see the changes');
 
                         });
                         //add the save button to the formDiv
                         formDiv.appendChild(saveButton);
+                        formsList.appendChild(formDiv);
                     };
 
                     // Append the button to formDiv
                     formDiv.appendChild(button);
                     formsList.appendChild(formDiv);
                     contentDiv.appendChild(formsList);
-                    formCount++;
                 });
             });
         });
@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
-function saveButtonClicked(form) {
+function saveButtonClicked(form, formName) {
     let formData = form.elements.map((element, index) => {
         if (element.type !== "button" && element.type !== "submit") {
             let inputValue = document.getElementById(
@@ -135,7 +135,6 @@ function saveButtonClicked(form) {
             };
         }
     });
-    const formName = form.id || form.name || 'unnamed_form_' + formCount;
     createJSONFromForm(formData, formName);
 }
 
