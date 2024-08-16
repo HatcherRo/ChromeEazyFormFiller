@@ -1,17 +1,11 @@
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    if (changeInfo.status === 'complete') {
-      chrome.tabs.executeScript(tabId, { file: 'content.js' });
-      console.log('content.js executed');
-    }
-  });
-
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  if (request.action === "download") {
-    var data = request.data;
-    var json = JSON.stringify(data);
-    var blob = new Blob([json], {type: 'application/json'});
-    var url = URL.createObjectURL(blob);
-    chrome.downloads.download({url: url, filename: 'data.json'});
-    console.log("DOWNLOADING RUNTIME", data);
-  }
+    if (request.action === "getCurrentTabUrl") {
+        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+            var currentTab = tabs[0];
+            if (currentTab) { // Check if the tab is found
+                sendResponse({url: currentTab.url});
+            }
+        });
+        return true;
+    }
 });

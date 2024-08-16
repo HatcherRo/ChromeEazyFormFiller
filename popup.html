@@ -7,14 +7,14 @@
 </head>
 <body>
     <div class="list-group">
-        <a href="#" class="list-group-item list-group-item-action">
+        <!-- <a href="#" class="list-group-item list-group-item-action">
             <i class="fas fa-cog"></i>
             <span>Settings</span>
-        </a>
-        <a href="#" class="list-group-item list-group-item-action">
-            <i class="fas fa-file-import"></i>
+        </a> -->
+        <button id="importButton" class="list-group-item list-group-item-action">
+            <i class="fas fa-file-export"></i>
             <span>Import</span>
-        </a>
+        </button>
         <button id="exportButton" class="list-group-item list-group-item-action">
             <i class="fas fa-file-export"></i>
             <span>Export</span>
@@ -23,9 +23,7 @@
             <span>Get Forms</span>
         </button>
     </div>
-    <div id="formsList"></div>
-    
-    <script src="js/getForms.js"></script>
+    <div id="content"></div>
     <script src="popup.js"></script>
 </body>
 </html>
