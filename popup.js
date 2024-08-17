@@ -91,7 +91,12 @@ document.addEventListener('DOMContentLoaded', function () {
                                     }: `;
                                 let fieldValue = document.createElement("input");
                                 fieldValue.type = element.type ? element.type : "text";
-                                fieldValue.value = element.value;
+                                if(element.type === "checkbox" || element.type === "radio") {
+                                    fieldValue.checked = element.checked;
+                                    fieldValue.value = element.checked;
+                                } else {
+                                    fieldValue.value = element.value;
+                                }
                                 fieldValue.id = `input-${form.index}-${index}`;
                                 fieldContainer.appendChild(fieldLabel);
                                 fieldContainer.appendChild(fieldValue);

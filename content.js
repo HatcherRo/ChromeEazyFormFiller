@@ -11,7 +11,9 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
                     tagName: element.tagName,
                     name: element.name,
                     type: element.type,
-                    value: element.value
+                    value: element.value,
+                    id: element.id,
+                    checked: element.checked
                 }))
             };
         });
@@ -61,7 +63,7 @@ function addPrefillButton(currentUrl, form, formData) {
                 const value = formData[elementName];
                 // Check if the element is a checkbox or radio button
                 if (element.type === 'checkbox' || element.type === 'radio') {
-                    element.checked = element.value === value;
+                    element.checked = formData[elementName] === 'true'
                 } else {
                     element.value = value;
                 }
